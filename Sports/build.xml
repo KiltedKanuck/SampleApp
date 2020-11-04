@@ -15,8 +15,13 @@
 		<emptyDir PATH="${BUILD.OUTPUT.DIR}" />
 	</target>
 
+	<target name="buildDatabase">
+		<mkdir dir="build/db" />
+		<sports2000 dbName="sports" destDir="build/db" dlcHome="${DLC}" />
+	</target>
+
 	<!-- Compile ABL code-->
-	<target name="compile" description="Compile ABL source files" depends="cleanBuildOutput, appserverCheck">
+	<target name="compile" description="Compile ABL source files" depends="cleanBuildOutput, appserverCheck, buildDatabase">
 
 		<!-- Compile files in Project Root folder -->
 		<compileABLCode BUILD-OUTPUT="${BUILD.OUTPUT.DIR}">

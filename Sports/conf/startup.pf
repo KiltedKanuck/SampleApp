@@ -1,1 +1,1 @@
--db c:\\OpenEdge\\wrk\\sports.db
+-db c:/workspace/SampleApp/Sports/build/db/sports -1
