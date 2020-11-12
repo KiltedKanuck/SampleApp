@@ -15,18 +15,8 @@
 		<emptyDir PATH="${BUILD.OUTPUT.DIR}" />
 	</target>
 
-	<target name="buildDatabase">
-		<mkdir dir="../build/db" />
-		<sports2000 dbName="sports" destDir="../build/db" dlcHome="${DLC}" />
-	</target>
-
 	<!-- Compile ABL code-->
-	<target name="compile" description="Compile ABL source files" depends="cleanBuildOutput, appserverCheck, buildDatabase">
-		<exec executable="${DLC}/bin/proserve.bat">
-    		<arg value="../build/db/sports"/>
-			<arg value="-S"/>
-			<arg value="2222"/>
-  		</exec>
+	<target name="compile" description="Compile ABL source files" depends="cleanBuildOutput, appserverCheck">
 		<!-- Compile files in Project Root folder -->
 		<compileABLCode BUILD-OUTPUT="${BUILD.OUTPUT.DIR}">
 			<ablfiles>
@@ -64,11 +54,6 @@
 			</zipfileset>
 			<zipfileset dir="${WEBAPP.DIST.DIR}" prefix="webapps" includes="*.war" />
 		</zip>
-		<exec executable="${DLC}/bin/proshut.bat">
-    		<arg value="../build/db/sports"/>
-			<arg value="-by"/>
-  		</exec>
-
 	</target>
 
 	<!-- Build single file -->
