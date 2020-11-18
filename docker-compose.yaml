@@ -1,8 +1,46 @@
-version: '3'
+version: "3.6"
 services:
-  web:
-    image: nginx
-    ports:
-    - "8080:80"
-    volumes:
-    - ./webui:/usr/share/nginx/html:ro
+    web:
+      image: nginx
+      ports:
+      - "8080:80"
+      volumes:
+      - ./webui:/usr/share/nginx/html:ro
+    jdk:
+        image: adoptopenjdk:11.0.4_11-jdk-hotspot
+        volumes:
+          - jdk_dc:/opt/java/openjdk
+    ablapp:
+        image: sports:latest
+        volumes:
+          - app_dc:/deploy-staging/artifacts
+    pasoeinstance:
+        image: store/progresssoftware/pasoe:12.2.2
+        depends_on: 
+          - jdk
+          - ablapp
+        environment:
+          - FLUENTBIT_LOGGING=false
+          - APP_NAME=sports
+          - INSTANCE_NAME=SampleApp
+        ports:
+          - "8811:8811"
+        container_name: "SampleApp_pasoeinstance_dc"
+        command: ["/bin/sh", "-c", "sh /deploy/scripts/startServer.sh"]
+        volumes:
+          - type: volume
+            source: jdk_dc
+            target: /usr/java
+            volume:
+              nocopy: true
+          - type: volume
+            source: app_dc
+            target: /deploy/artifacts
+            volume:
+              nocopy: true
+          - ./deploy/license/progress.cfg:/psc/dlc/progress.cfg
+          - ./deploy/conf\runtime.properties:/deploy/scripts/config/runtime.properties
+          - ./deploy\conf/logging:/fluentbit-tlr
+volumes:
+    jdk_dc:
+    app_dc:
